@@ -7,37 +7,45 @@ const Marks = () => {
     const { userState, userDispatch } = useContext(userContext)
     const [subject, setSubject] = useState("")
     const [marks, setMarks] = useState(0)
-    const [subjectMarks, setSubjectMarks] = useState([])
-    const [removebtn, setRemovebtn] = useState(false)
-    // handleSubjectChange=(e)=>{
+    const [subjectMarks, setSubjectMarks] = useState([{
+        subject: "",
+        marks: 0
 
 
-    // }
-    const handleClick = () => {
-        // setSubjectMarks([...subjectMarks,{
-        //     subject:subject,
-        //     marks:marks
-        // }])
-        console.log(subjectMarks)
+    }])
+
+
+    const handleChange = (e, id) => {
+
+        let formValues = subjectMarks;
+        formValues[id][e.target.name] = e.target.value
+        setSubjectMarks(formValues)
 
     }
+    const handleAdd = () => {
+        console.log(subjectMarks);
+        setSubjectMarks(
+            [...subjectMarks, { subject: "", marks: 0 }]
+        )
+        console.log(subjectMarks);
+    }
+
+
+    const handleRemove = (id) => {
+
+        let formValues = subjectMarks;
+        console.log(formValues);
+        formValues.splice(id, 1)
+        console.log(formValues);
+        setSubjectMarks(formValues)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(subjectMarks)
+
     }
-    const handleSave = () => {
-        // setSubjectMarks([...subjectMarks,{
-        //     subject:subject,
-        //     marks:marks
-        // }])
-        const arrayvalue = [...subjectMarks];
-        arrayvalue.push({
-            subject: subject,
-            marks: marks
-        });
-        setSubjectMarks(arrayvalue)
-        console.log(subjectMarks)
-    }
+
+
 
     return (
         <div class="d-flex justify-content-center my-5 " >
@@ -55,32 +63,35 @@ const Marks = () => {
                     <input type="number" class="form-control" placeholder="Enter #subjects" id="email" value={count} onChange={(e) => setCount(e.target.value)} />
                 </div>
                 <div>
-                    {count != 0 && <div >
+                    <div>
                         <h3 className='my-5'>Subjects</h3>
-                        <div className="">
-                            {/* {inputs} */}
+                        <div>
                             {
-                                Array.from({ length: count }).map((_, id) =>
+                                subjectMarks.map((subjectMark, id) =>
                                     <div className="row" key={id}>
-                                        {!removebtn && <><div class="form-group col-5">
-                                            <label for="session">Subject Name :</label>
-                                            <input type="text" class="form-control" onChange={(e) => { setSubject(e.target.value) }} />
+                                        <div class="form-group col-5">
+                                            <label for="session">Subject Name:</label>
+                                            <input name="subject" type="text" class="form-control" onChange={(e) => handleChange(e, id)} />
                                         </div>
 
                                         <div class="form-group col-5">
                                             <label for="session">Marks:</label>
-                                            <input type="number" class="form-control" onChange={(e) => { setMarks(e.target.value) }} />
+                                            <input name="marks" type="number" class="form-control" onChange={(e) => handleChange(e, id)} />
                                         </div>
-                                        <div class="col-1  my-auto"><button  class="btn btn-danger text-center" onClick={()=>setRemovebtn(true)}>Remove</button></div>
-                                        </>}
+                                        {id ?
+                                            <div class="col-1  my-auto"><button class="btn btn-danger text-center" onClick={() => handleRemove(id)}>Remove</button></div>
+                                            : null
+                                        }
+
+
                                     </div>
-                                    )
+                                )
                             }
                         </div>
-
-                    </div>}
+                        <div class="col-1  my-auto"><button class="btn btn-info text-center" onClick={handleAdd}>Add</button></div>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-info" onClick={handleClick}>Submit</button>
+                {/* <button type="submit" class="btn btn-info">Submit</button> */}
             </form>
         </div>
     )
