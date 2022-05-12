@@ -4,6 +4,8 @@ import Home from './components/Home/Home'
 import Footer from './components/Footer/Footer'
 import Navbar from './components/Navbar/Navbar'
 import Profile from './components/Profile/Profile'
+import React,{createContext, useReducer} from 'react'
+import {initialState, userReducer} from './components/reducer/useReducer'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   BrowserRouter as Router,
@@ -12,7 +14,13 @@ import {
   Link
 } from "react-router-dom";
 import Marks from './components/Marks/Marks'
+
+export const userContext = createContext([]);
+
 function App() {
+
+  const [state,dispatch] = useReducer(userReducer,initialState);
+
   const THEME = createTheme ({
     typography: {
       "fontFamily": `"Roboto", "Helvetica", "Arial", sans-serif`,
@@ -22,8 +30,13 @@ function App() {
       "fontWeightMedium": 500
     }
   });
+
+
+
+  
   return (
     <>
+    <userContext.Provider value={{state,dispatch}}>
       <ThemeProvider theme={THEME}>
         <Router>
           <Navbar />
@@ -37,6 +50,7 @@ function App() {
         </Router>
         <Footer />
       </ThemeProvider>
+      </userContext.Provider>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Papa from "papaparse"
 import BarChart from "../Charts/BarChart";
 import PieChart from '../Charts/PieChart';
@@ -6,14 +6,25 @@ import DoughnutChart from '../Charts/DoughnutChart';
 import { UserData } from "../../Data";
 import LineChart from '../Charts/LineChart';
 import {Link} from "react-router-dom";
-// const sampleData = 'Column 1,Column 2,Column 3,Column 4 1-1,1-2,1-3,1-4 2-1,2-2,2-3,2-43-1,3-2,3-3,3-4 4,5,6,7';
+import axios from 'axios'
+import { userContext } from '../../App';
+
 const Home = () => {
 
     const [file, setFile] = useState()
+    const[regNum,setRegNum]= useState()
+    const[sessionMarks,setSessionMarks]= useState([])
+    const[sessions,setSessions]= useState([])
+    const[cumulper,setCumulper]= useState()
+    const[subjects,setSubjects]=useState()
+    const[inputMarks,setInputMarks]=useState()
     const [chartData, setChartData] = useState()
     const [parsedFile, setParsedFile] = useState();
     const [userData, setUserData] = useState()
     const [option,setOption] = useState("line")
+
+    const {userState,userDispatch} = useContext(userContext)
+
     const handleOnChange = (e) => {
         setFile(e.target.files[0]);
     };
@@ -75,6 +86,21 @@ const Home = () => {
             ],
         });
     }, [])
+
+useEffect(()=>{
+    axios.post('/sessionmarks',{
+        reg_no:regNum
+    }).then(res=>{
+        console.log(res)
+        if(res)
+        {
+            setSessionMarks(res.data);
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
+})
+
     const options = {
         responsive: true,
         scales: {
@@ -87,6 +113,8 @@ const Home = () => {
             }]
         }
     }
+
+
 
     return (
         <>
