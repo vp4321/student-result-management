@@ -5,23 +5,6 @@ const getstudentmarks = async(req, res) => {
   if (!student) res.sendStatus(204);
   res.json(student);
 };
-const poststudentmarks = async(req, res) => {
-  const {reg, session } = req.body;
-  if (!reg || !session ) {
-    console.log("error");
-    return res.status(400).json({ message: "missing" });
-  }
-  try {
-    const newstudent = await Student.create({
-      "reg_no": reg,
-      "sessionmarks": session
-    });
-    console.log(newstudent);
-    res.status(201).send(newstudent);
-} catch (err) {
-    res.json({ message: err.message });
-};
-}
 const specificstudent = async(req,res) => {
     const roll = req.params.roll;
     const student = await Student.findOne({reg_no : parseInt(roll)})
@@ -30,7 +13,7 @@ const specificstudent = async(req,res) => {
             'message' : 'Missing'
         })
     }
-    res.send(student)
+    res.send(student.sessionmarks)
     // console.log(student.sessionmarks)
 } 
 const specificsessionmarks = async(req,res) => {
@@ -85,4 +68,48 @@ const specificsubjects = async(req,res) => {
   res.send(subjects)
 }
 
-module.exports = { getstudentmarks, poststudentmarks,specificstudent,specificsessionmarks,specificsubjects,totalsessions}
+const updatestudentmarks = async(req,res) => {
+  const roll = req.params.roll;
+  const session = req.params.session; 
+
+  const student = await Student.findOne({reg_no : parseInt(roll)})
+  if(!student) {
+    try {
+      const newstudent = await Student.create({
+        "reg_no": roll,
+        "sessionmarks": [{
+          "session" : session,
+          "subjectmarks" : [{
+              "subject" : req.body.subject,
+              "marks" : req.body.marks
+          }]
+        }]
+      });
+      console.log(newstudent);
+      return res.status(201).send(newstudent);
+  } catch (err) {
+      return res.json({ message: err.message });
+  };
+  }
+  let studentsessionmarks = student.sessionmarks
+  var sessionobj = studentsessionmarks.find(item => item.session == session)
+  let pairs = sessionobj.subjectmarks
+  const detail = {
+    subject : req.body.subject,
+    marks : req.body.marks
+  }
+  pairs = [...pairs,detail]
+
+  studentsessionmarks.forEach((item,index) => {
+    if(item.session == session) {
+      item.subjectmarks = pairs
+    }
+  });
+  student.sessionmarks = studentsessionmarks
+  var newvalues = { $set: student };
+  await Student.updateOne({"reg_no" : parseInt(roll)},newvalues);
+  const student2 = await Student.findOne({reg_no : parseInt(roll)})
+  res.send(student2.sessionmarks)
+}
+
+module.exports = { getstudentmarks,specificstudent,specificsessionmarks,specificsubjects,totalsessions,updatestudentmarks}
