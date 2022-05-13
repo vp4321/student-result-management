@@ -33,7 +33,7 @@ const Marks = () => {
 
     const handleRemove = (id) => {
 
-        let formValues = subjectMarks;
+        let formValues = [...subjectMarks];
         console.log(formValues);
         formValues.splice(id, 1)
         console.log(formValues);
