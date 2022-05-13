@@ -167,28 +167,9 @@ const Home = () => {
                 </table>
             </div>
             <div className="d-flex justify-content-center">
-                <Link to="marks"><button className="btn btn-info my-4">Enter Marks Manually</button></Link>
-                <Link to="datavis"><button className="btn btn-info my-4">Data Vis</button></Link>
-            </div>
-            <div className="d-flex  justify-content-center opt">
-                <select value={option} onChange={(e) => { setOption(e.target.value) }}>
-                    <option value="pie">Pie</option>
-                    <option value="bar">Bar</option>
-                    <option value="doughnut">Doughnut</option>
-                    <option value="line">Line</option>
-                </select>
-            </div>
-            <div>
-                {userData ? option == "bar" && <BarChart chartData={userData} options={options} /> : <></>}
-            </div>
-            <div>
-                {userData ? option == "pie" && <PieChart chartData={userData} options={options} /> : <></>}
-            </div>
-            <div>
-                {userData ? option == "doughnut" && <DoughnutChart chartData={userData} options={options} /> : <></>}
-            </div>
-            <div>
-                {userData ? option == "line" && <LineChart chartData={userData} options={options} /> : <></>}
+                <Link to="marks"><button className="btn btn-info my-4 mx-2">Enter Marks Manually</button></Link>
+                <Link to="datavis"><button className="btn btn-info my-4 mx-2">Data Vis</button></Link>
+                <Link to="report"><button className="btn btn-info my-4 mx-2">Generate Report</button></Link>
             </div>
         </>
     )

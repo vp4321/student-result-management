@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react'
 import { userContext } from '../../App';
 
@@ -7,6 +8,7 @@ const Marks = () => {
     const { userState, userDispatch } = useContext(userContext)
     const [subject, setSubject] = useState("")
     const [marks, setMarks] = useState(0)
+    const [session, setSession] = useState("")
     const [subjectMarks, setSubjectMarks] = useState([{
         subject: "",
         marks: 0
@@ -41,6 +43,17 @@ const Marks = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(subjectMarks)
+        axios.post(`http://localhost:3500/students`, {
+            reg: userState.reg_no,
+            session: {
+                session: session,
+                subjectmarks: subjectMarks
+            }
+        }).then((res) =>
+            console.log(res)
+        ).catch((err)=>{
+            console.log(err)
+        })
     }
 
 
@@ -50,15 +63,15 @@ const Marks = () => {
             <form action="" style={{ width: "30vw" }} onSubmit={handleSubmit}>
                 <div class="form-group">
                     <label for="session">Session :</label>
-                    <input type="number" class="form-control" placeholder="Enter Session" id="email" />
+                    <input type="number" class="form-control" onChange={(e) => { setSession(e.target.value) }} placeholder="Enter Session" />
                 </div>
                 <div class="form-group">
                     <label for="session">Total Marks :</label>
-                    <input type="number" class="form-control" placeholder="Enter total marks" id="email" />
+                    <input type="number" class="form-control" placeholder="Enter total marks" />
                 </div>
                 <div class="form-group">
                     <label for="session">Subjects :</label>
-                    <input type="number" class="form-control" placeholder="Enter #subjects" id="email" value={count} onChange={(e) => setCount(e.target.value)} />
+                    <input type="number" class="form-control" placeholder="Enter #subjects" value={count} onChange={(e) => setCount(e.target.value)} />
                 </div>
                 <div>
                     <div>
@@ -87,7 +100,7 @@ const Marks = () => {
                             }
                         </div>
                         <div class="col-1  my-auto d-flex text-left">
-                        <button class="btn btn-info text-center m-2 " onClick={() => handleAdd()}>Add</button>
+                            <button class="btn btn-info text-center m-2 " onClick={() => handleAdd()}>Add</button>
                             <button type="submit" class="btn btn-info m-2" >Submit</button>
                         </div>
                     </div>

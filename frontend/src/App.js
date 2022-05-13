@@ -17,6 +17,7 @@ import {
   Link
 } from "react-router-dom";
 import Marks from './components/Marks/Marks'
+import Report from './components/Report/Report'
 
 export const userContext = createContext({});
 // {
@@ -70,6 +71,7 @@ function App() {
               <Route path="/profile" element={<Profile />}></Route>
               <Route path="/marks" element={<Marks />}></Route>
               <Route path="/datavis" element={<DataVisual />}></Route>
+              <Route path="/report" element={<Report />}></Route>
             </Routes>
           </Router>
           <Footer />
