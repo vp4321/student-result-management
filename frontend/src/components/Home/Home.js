@@ -5,25 +5,25 @@ import PieChart from '../Charts/PieChart';
 import DoughnutChart from '../Charts/DoughnutChart';
 import { UserData } from "../../Data";
 import LineChart from '../Charts/LineChart';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from 'axios'
 import { userContext } from '../../App';
 
 const Home = () => {
 
     const [file, setFile] = useState()
-    const[regNum,setRegNum]= useState()
-    const[sessionMarks,setSessionMarks]= useState([])
-    const[sessions,setSessions]= useState([])
-    const[cumulper,setCumulper]= useState()
-    const[subjects,setSubjects]=useState()
-    const[inputMarks,setInputMarks]=useState()
+    const [regNum, setRegNum] = useState()
+    const [sessionMarks, setSessionMarks] = useState([])
+    const [sessions, setSessions] = useState([])
+    const [cumulper, setCumulper] = useState()
+    const [subjects, setSubjects] = useState()
+    const [inputMarks, setInputMarks] = useState()
     const [chartData, setChartData] = useState()
     const [parsedFile, setParsedFile] = useState();
     const [userData, setUserData] = useState()
-    const [option,setOption] = useState("line")
+    const [option, setOption] = useState("line")
 
-    const {userState,userDispatch} = useContext(userContext)
+    const { userState, userDispatch } = useContext(userContext);
 
     const handleOnChange = (e) => {
         setFile(e.target.files[0]);
@@ -87,19 +87,17 @@ const Home = () => {
         });
     }, [])
 
-useEffect(()=>{
-    axios.post('/sessionmarks',{
-        reg_no:regNum
-    }).then(res=>{
-        console.log(res)
-        if(res)
-        {
-            setSessionMarks(res.data);
-        }
-    }).catch(err=>{
-        console.log(err)
-    })
-})
+    useEffect(() => {
+        axios.get(`/students/${userState.reg_no}`)
+            .then(res => {
+                console.log(res)
+                if (res) {
+                    userDispatch({type:"STUDENT",payload:res.data})
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+    },[])
 
     const options = {
         responsive: true,
@@ -169,11 +167,11 @@ useEffect(()=>{
                 </table>
             </div>
             <div className="d-flex justify-content-center">
-                    <Link to="marks"><button className="btn btn-info my-4">Enter Marks Manually</button></Link>
-                
+                <Link to="marks"><button className="btn btn-info my-4">Enter Marks Manually</button></Link>
+                <Link to="datavis"><button className="btn btn-info my-4">Data Vis</button></Link>
             </div>
             <div className="d-flex  justify-content-center opt">
-                <select value={option} onChange={(e)=>{setOption(e.target.value)}}>
+                <select value={option} onChange={(e) => { setOption(e.target.value) }}>
                     <option value="pie">Pie</option>
                     <option value="bar">Bar</option>
                     <option value="doughnut">Doughnut</option>
@@ -181,16 +179,16 @@ useEffect(()=>{
                 </select>
             </div>
             <div>
-                {userData ? option=="bar"&& <BarChart chartData={userData} options={options} /> : <></>}
+                {userData ? option == "bar" && <BarChart chartData={userData} options={options} /> : <></>}
             </div>
             <div>
-                {userData ?  option=="pie"&&<PieChart chartData={userData} options={options}/> : <></>}
+                {userData ? option == "pie" && <PieChart chartData={userData} options={options} /> : <></>}
             </div>
             <div>
-                {userData ? option=="doughnut"&& <DoughnutChart chartData={userData} options={options}/> : <></>}
+                {userData ? option == "doughnut" && <DoughnutChart chartData={userData} options={options} /> : <></>}
             </div>
             <div>
-                {userData ? option=="line"&&<LineChart chartData={userData} options={options}/> : <></>}
+                {userData ? option == "line" && <LineChart chartData={userData} options={options} /> : <></>}
             </div>
         </>
     )
