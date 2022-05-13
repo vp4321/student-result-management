@@ -10,14 +10,12 @@ const Marks = () => {
     const [subjectMarks, setSubjectMarks] = useState([{
         subject: "",
         marks: 0
-
-
     }])
 
 
     const handleChange = (e, id) => {
 
-        let formValues = subjectMarks;
+        let formValues = [...subjectMarks];
         formValues[id][e.target.name] = e.target.value
         setSubjectMarks(formValues)
 
@@ -33,7 +31,7 @@ const Marks = () => {
 
     const handleRemove = (id) => {
 
-        let formValues = subjectMarks;
+        let formValues = [...subjectMarks];
         console.log(formValues);
         formValues.splice(id, 1)
         console.log(formValues);
@@ -42,7 +40,7 @@ const Marks = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        console.log(subjectMarks)
     }
 
 
@@ -88,10 +86,13 @@ const Marks = () => {
                                 )
                             }
                         </div>
-                        <div class="col-1  my-auto"><button class="btn btn-info text-center" onClick={handleAdd}>Add</button></div>
+                        <div class="col-1  my-auto d-flex text-left">
+                        <button class="btn btn-info text-center m-2 " onClick={() => handleAdd()}>Add</button>
+                            <button type="submit" class="btn btn-info m-2" >Submit</button>
+                        </div>
                     </div>
                 </div>
-                {/* <button type="submit" class="btn btn-info">Submit</button> */}
+
             </form>
         </div>
     )
